@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<title>Sayt placeholder renderer</title>
+<style>
+  @font-face { font-family: 'Display'; src: url(../src/fonts/thmanyah-display-700.woff2) format('woff2'); }
+  @font-face { font-family: 'Sans'; src: url(../src/fonts/thmanyah-sans-500.woff2) format('woff2'); }
+  html, body { margin: 0; background: #000; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+/*
+ * Renders clearly-labelled PLACEHOLDER campaign clips, frame by frame.
+ * Every scene is loopable: all motion is a function of phase = t / duration.
+ * These clips exist only so that every player on the site is a real, working
+ * <video> until authorised campaign footage replaces them.
+ */
+const TAU = Math.PI * 2;
+const c = document.getElementById('c');
+const g = c.getContext('2d');
+let S, W, H, grain, weave;
+
+function rng(seed) { let s = seed >>> 0; return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296); }
+
+function makeGrain(w, h, seed) {
+  const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+  const x = cv.getContext('2d'); const img = x.createImageData(w, h); const r = rng(seed);
+  for (let i = 0; i < img.data.length; i += 4) { const v = r() * 255; img.data[i] = img.data[i+1] = img.data[i+2] = v; img.data[i+3] = 22; }
+  x.putImageData(img, 0, 0); return cv;
+}
+function makeWeave(size) {
+  const cv = document.createElement('canvas'); cv.width = cv.height = size;
+  const x = cv.getContext('2d');
+  for (let i = 0; i < size; i += 4) {
+    x.fillStyle = (i / 4) % 2 ? 'rgba(255,255,255,.035)' : 'rgba(0,0,0,.05)';
+    x.fillRect(i, 0, 2, size); x.fillRect(0, i + 2, size, 2);
+  }
+  return cv;
+}
+
+window.setup = (scene) => {
+  S = scene; W = c.width = scene.w; H = c.height = scene.h;
+  grain = [0, 1, 2].map((k) => makeGrain(256, 256, 7 + k * 31));
+  weave = g.createPattern(makeWeave(8), 'repeat');
+};
+
+const ease = (x) => 0.5 - 0.5 * Math.cos(Math.PI * Math.min(1, Math.max(0, x)));
+const wave = (p, k = 1, o = 0) => Math.sin(TAU * (p * k + o));
+const win = (p, a, b) => ease((p - a) / 0.08) * (1 - ease((p - b) / 0.08));
+
+function background(p) {
+  const [a, b, d] = S.palette;
+  g.fillStyle = d; g.fillRect(0, 0, W, H);
+  const lx = W * (0.25 + 0.15 * wave(p)), ly = H * (0.2 + 0.08 * wave(p, 1, 0.25));
+  let rg = g.createRadialGradient(lx, ly, 0, lx, ly, Math.max(W, H) * 0.9);
+  rg.addColorStop(0, a); rg.addColorStop(0.55, b); rg.addColorStop(1, d);
+  g.fillStyle = rg; g.fillRect(0, 0, W, H);
+  g.fillStyle = weave; g.fillRect(0, 0, W, H);
+}
+
+function finish(p, f) {
+  // vignette
+  const vg = g.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.3, W / 2, H / 2, Math.max(W, H) * 0.75);
+  vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,.55)');
+  g.fillStyle = vg; g.fillRect(0, 0, W, H);
+  // animated grain
+  const gp = g.createPattern(grain[f % 3], 'repeat'); g.fillStyle = gp; g.fillRect(0, 0, W, H);
+  // placeholder label — always visible
+  const u = Math.min(W, H) / 540;
+  g.font = `${15 * u}px Sans`; g.textBaseline = 'middle';
+  const label = 'نموذج مؤقت · PLACEHOLDER';
+  const tw = g.measureText(label).width + 26 * u, th = 30 * u;
+  const x = W - tw - 20 * u, y = (S.vertical ? 46 : 22) * u;
+  g.fillStyle = 'rgba(0,0,0,.45)'; roundRect(x, y, tw, th, th / 2); g.fill();
+  g.strokeStyle = 'rgba(255,255,255,.35)'; g.lineWidth = 1; g.stroke();
+  g.fillStyle = '#fff'; g.textAlign = 'center'; g.fillText(label, x + tw / 2, y + th / 2 + 1 * u);
+  if (S.vertical) storyBars(p, u);
+}
+
+function storyBars(p, u) {
+  const n = 3, gap = 6 * u, m = 20 * u, bw = (W - m * 2 - gap * (n - 1)) / n;
+  for (let i = 0; i < n; i++) {
+    const x = W - m - (i + 1) * bw - i * gap; // RTL order
+    g.fillStyle = 'rgba(255,255,255,.3)'; roundRect(x, 22 * u, bw, 4 * u, 2 * u); g.fill();
+    const fill = Math.min(1, Math.max(0, p * n - i));
+    g.fillStyle = '#fff'; roundRect(x + bw * (1 - fill), 22 * u, bw * fill, 4 * u, 2 * u); g.fill();
+  }
+}
+
+function roundRect(x, y, w, h, r) { g.beginPath(); g.roundRect(x, y, w, Math.max(h, 0.01), r); }
+
+function shadow(cx, cy, rx, ry, a = 0.45) {
+  const sg = g.createRadialGradient(cx, cy, 0, cx, cy, rx);
+  sg.addColorStop(0, `rgba(0,0,0,${a})`); sg.addColorStop(1, 'rgba(0,0,0,0)');
+  g.save(); g.translate(cx, cy); g.scale(1, ry / rx); g.translate(-cx, -cy);
+  g.fillStyle = sg; g.beginPath(); g.arc(cx, cy, rx, 0, TAU); g.fill(); g.restore();
+}
+
+function lightSweep(p, x0, y0, w, h) {
+  g.save(); g.beginPath(); g.rect(x0, y0, w, h); g.clip();
+  const sx = x0 - w + ((p * 1.6) % 1.6) * w * 2;
+  const lg = g.createLinearGradient(sx, y0, sx + w * 0.5, y0 + h);
+  lg.addColorStop(0, 'rgba(255,255,255,0)'); lg.addColorStop(0.5, 'rgba(255,255,255,.28)'); lg.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = lg; g.fillRect(x0, y0, w, h); g.restore();
+}
+
+/* ---------- motifs ---------- */
+const motifs = {
+  bottle(p, u, cx, cy) {
+    const s = u * (S.vertical ? 1 : 0.85);
+    const bob = wave(p) * 10 * s, rot = wave(p, 1, 0.1) * 0.05;
+    shadow(cx, cy + 210 * s, 120 * s, 22 * s, 0.5 - 0.1 * wave(p));
+    g.save(); g.translate(cx, cy + bob); g.rotate(rot);
+    const bw = 150 * s, bh = 300 * s;
+    const lg = g.createLinearGradient(-bw / 2, 0, bw / 2, 0);
+    lg.addColorStop(0, S.accent[1]); lg.addColorStop(0.35, S.accent[0]); lg.addColorStop(0.7, S.accent[1]); lg.addColorStop(1, 'rgba(0,0,0,.6)');
+    g.fillStyle = lg; roundRect(-bw / 2, -bh / 2 + 40 * s, bw, bh, 34 * s); g.fill();
+    g.fillStyle = 'rgba(255,255,255,.18)'; roundRect(-bw / 2 + 18 * s, -bh / 2 + 70 * s, 16 * s, bh - 70 * s, 8 * s); g.fill();
+    // neck + cap
+    const cg = g.createLinearGradient(-40 * s, 0, 40 * s, 0);
+    cg.addColorStop(0, '#2b2b2b'); cg.addColorStop(0.4, '#9c9c9c'); cg.addColorStop(1, '#1a1a1a');
+    g.fillStyle = cg; roundRect(-40 * s, -bh / 2 - 40 * s, 80 * s, 86 * s, 12 * s); g.fill();
+    // label
+    g.fillStyle = 'rgba(255,255,255,.85)'; roundRect(-bw / 2 + 30 * s, 10 * s, bw - 60 * s, 90 * s, 10 * s); g.fill();
+    g.fillStyle = S.palette[2]; g.font = `${30 * s}px Display`; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText('علامتك', 0, 55 * s);
+    lightSweep(p, -bw / 2, -bh / 2 + 40 * s, bw, bh);
+    g.restore();
+  },
+  cup(p, u, cx, cy) {
+    const s = u * (S.vertical ? 1 : 0.85);
+    shadow(cx, cy + 150 * s, 190 * s, 30 * s, 0.55);
+    g.save(); g.translate(cx, cy);
+    // saucer
+    g.fillStyle = S.accent[1]; g.beginPath(); g.ellipse(0, 140 * s, 190 * s, 34 * s, 0, 0, TAU); g.fill();
+    g.fillStyle = 'rgba(255,255,255,.12)'; g.beginPath(); g.ellipse(0, 134 * s, 160 * s, 24 * s, 0, 0, TAU); g.fill();
+    // body
+    const lg = g.createLinearGradient(-130 * s, 0, 130 * s, 0);
+    lg.addColorStop(0, '#d8d2c8'); lg.addColorStop(0.35, '#fffaf2'); lg.addColorStop(1, '#8f877c');
+    g.fillStyle = lg; g.beginPath();
+    g.moveTo(-130 * s, -40 * s); g.lineTo(130 * s, -40 * s); g.quadraticCurveTo(120 * s, 130 * s, 0, 135 * s); g.quadraticCurveTo(-120 * s, 130 * s, -130 * s, -40 * s); g.fill();
+    // handle
+    g.strokeStyle = '#cfc8bd'; g.lineWidth = 18 * s; g.beginPath(); g.arc(-140 * s, 30 * s, 40 * s, Math.PI * 0.5, Math.PI * 1.5); g.stroke();
+    // drink
+    g.fillStyle = S.accent[0]; g.beginPath(); g.ellipse(0, -40 * s, 130 * s, 26 * s, 0, 0, TAU); g.fill();
+    g.strokeStyle = 'rgba(255,240,220,.55)'; g.lineWidth = 4 * s; g.beginPath();
+    for (let i = 0; i <= 40; i++) { const a = (i / 40) * TAU * 1.5 + p * TAU; const r = (i / 40) * 70 * s; g.lineTo(Math.cos(a) * r, -40 * s + Math.sin(a) * r * 0.2); }
+    g.stroke();
+    // steam
+    g.strokeStyle = 'rgba(255,255,255,.35)'; g.lineWidth = 7 * s; g.lineCap = 'round';
+    for (let k = -1; k <= 1; k++) {
+      g.beginPath();
+      for (let i = 0; i <= 30; i++) { const y = -70 * s - i * 7 * s; const x = k * 45 * s + Math.sin(i * 0.35 + p * TAU + k) * 14 * s; i ? g.lineTo(x, y) : g.moveTo(x, y); }
+      g.globalAlpha = 0.6 + 0.4 * wave(p, 1, k * 0.3); g.stroke(); g.globalAlpha = 1;
+    }
+    g.restore();
+  },
+  box(p, u, cx, cy) {
+    const s = u * (S.vertical ? 1 : 0.85);
+    const open = ease((Math.sin(TAU * p - Math.PI / 2) + 1) / 2);
+    shadow(cx, cy + 160 * s, 200 * s, 30 * s, 0.5);
+    g.save(); g.translate(cx, cy + 40 * s);
+    // glow from inside
+    const gl = g.createRadialGradient(0, -60 * s, 0, 0, -60 * s, 260 * s * open + 1);
+    gl.addColorStop(0, S.accent[0]); gl.addColorStop(1, 'rgba(0,0,0,0)');
+    g.globalAlpha = 0.8 * open; g.fillStyle = gl; g.fillRect(-300 * s, -360 * s, 600 * s, 400 * s); g.globalAlpha = 1;
+    // product rising
+    g.fillStyle = '#fff'; roundRect(-30 * s, -40 * s - 120 * s * open, 60 * s, 120 * s, 14 * s); g.fill();
+    // box body
+    const lg = g.createLinearGradient(-170 * s, 0, 170 * s, 0);
+    lg.addColorStop(0, S.accent[1]); lg.addColorStop(0.5, S.accent[0]); lg.addColorStop(1, S.accent[1]);
+    g.fillStyle = lg; roundRect(-170 * s, -40 * s, 340 * s, 190 * s, 12 * s); g.fill();
+    g.fillStyle = 'rgba(255,255,255,.75)'; g.fillRect(-14 * s, -40 * s, 28 * s, 190 * s);
+    // lid
+    g.save(); g.translate(-170 * s, -40 * s); g.rotate(-open * 0.9);
+    g.fillStyle = S.accent[0]; roundRect(0, -36 * s, 350 * s, 40 * s, 10 * s); g.fill();
+    g.fillStyle = 'rgba(255,255,255,.75)'; g.fillRect(156 * s, -36 * s, 28 * s, 40 * s);
+    g.restore();
+    g.restore();
+    // sparkles
+    const r = rng(3);
+    for (let i = 0; i < 26; i++) {
+      const a = r() * TAU, d = (60 + r() * 220) * s * open, ph = (p + r()) % 1;
+      g.globalAlpha = open * (1 - ph); g.fillStyle = '#fff';
+      g.beginPath(); g.arc(cx + Math.cos(a) * d, cy - 40 * s + Math.sin(a) * d * 0.7 - ph * 60 * s, (2 + r() * 3) * s, 0, TAU); g.fill();
+    }
+    g.globalAlpha = 1;
+  },
+  portrait(p, u, cx, cy) {
+    const s = u * (S.vertical ? 1 : 0.85);
+    // ring light
+    g.save(); g.translate(cx, cy - 120 * s);
+    g.strokeStyle = 'rgba(255,255,255,.85)'; g.lineWidth = 16 * s; g.shadowColor = '#fff'; g.shadowBlur = 40 * s;
+    g.beginPath(); g.arc(0, 0, 190 * s, 0, TAU); g.stroke(); g.restore();
+    g.shadowBlur = 0;
+    // silhouette with rim light
+    const sway = wave(p) * 8 * s, nod = wave(p, 2) * 4 * s;
+    g.save(); g.translate(cx + sway, cy);
+    const body = g.createLinearGradient(-200 * s, 0, 200 * s, 0);
+    body.addColorStop(0, S.accent[0]); body.addColorStop(0.12, S.accent[1]); body.addColorStop(0.88, S.accent[1]); body.addColorStop(1, S.accent[0]);
+    g.fillStyle = body;
+    g.beginPath(); g.moveTo(-240 * s, 420 * s); g.bezierCurveTo(-235 * s, 150 * s, -170 * s, 70 * s, -34 * s, 40 * s);
+    g.lineTo(-30 * s, -20 * s); g.lineTo(30 * s, -20 * s); g.lineTo(34 * s, 40 * s);
+    g.bezierCurveTo(170 * s, 70 * s, 235 * s, 150 * s, 240 * s, 420 * s); g.fill();
+    g.beginPath(); g.ellipse(0, -110 * s + nod, 66 * s, 84 * s, 0, 0, TAU); g.fill();
+    // hair
+    g.beginPath(); g.ellipse(4 * s, -150 * s + nod, 76 * s, 62 * s, -0.15, Math.PI * 0.95, Math.PI * 2.05); g.fill();
+    g.restore();
+    // UGC structure captions
+    const caps = S.captions || ['الافتتاحية · Hook', 'التجربة', 'الدعوة للتواصل'];
+    caps.forEach((t, i) => {
+      const a = win(p, i / caps.length, (i + 1) / caps.length);
+      if (a <= 0) return;
+      g.globalAlpha = a; g.font = `${34 * s}px Display`; g.textAlign = 'center'; g.textBaseline = 'middle';
+      const tw = g.measureText(t).width + 44 * s;
+      const y = cy + 260 * s - 12 * s * (1 - a);
+      g.fillStyle = '#fff'; roundRect(cx - tw / 2, y - 30 * s, tw, 60 * s, 14 * s); g.fill();
+      g.fillStyle = '#111'; g.fillText(t, cx, y + 2 * s); g.globalAlpha = 1;
+    });
+  },
+  spotlight(p, u, cx, cy) {
+    const s = u;
+    for (let k = -2; k <= 2; k++) {
+      const ang = k * 0.22 + wave(p, 1, k * 0.13) * 0.18;
+      g.save(); g.translate(cx + k * 90 * s, -40 * s); g.rotate(ang);
+      const lg = g.createLinearGradient(0, 0, 0, H);
+      lg.addColorStop(0, 'rgba(255,255,255,.55)'); lg.addColorStop(1, 'rgba(255,255,255,0)');
+      g.fillStyle = lg; g.globalCompositeOperation = 'lighter'; g.globalAlpha = 0.35;
+      g.beginPath(); g.moveTo(-14 * s, 0); g.lineTo(14 * s, 0); g.lineTo(150 * s, H * 1.1); g.lineTo(-150 * s, H * 1.1); g.fill();
+      g.restore();
+    }
+    g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1;
+    // stage
+    g.fillStyle = 'rgba(0,0,0,.55)'; g.beginPath(); g.ellipse(cx, cy + 300 * s, 360 * s, 70 * s, 0, 0, TAU); g.fill();
+    const sg = g.createRadialGradient(cx, cy + 290 * s, 0, cx, cy + 290 * s, 300 * s);
+    sg.addColorStop(0, 'rgba(255,240,200,.6)'); sg.addColorStop(1, 'rgba(255,240,200,0)');
+    g.fillStyle = sg; g.beginPath(); g.ellipse(cx, cy + 290 * s, 300 * s, 60 * s, 0, 0, TAU); g.fill();
+    // star figure
+    g.fillStyle = 'rgba(10,10,20,.9)';
+    g.beginPath(); g.ellipse(cx, cy + 10 * s, 40 * s, 50 * s, 0, 0, TAU); g.fill();
+    g.beginPath(); g.moveTo(cx - 90 * s, cy + 300 * s); g.quadraticCurveTo(cx - 80 * s, cy + 80 * s, cx, cy + 70 * s); g.quadraticCurveTo(cx + 80 * s, cy + 80 * s, cx + 90 * s, cy + 300 * s); g.fill();
+    // flashes
+    const r = rng(11);
+    for (let i = 0; i < 14; i++) {
+      const ph = (p * 3 + r()) % 1; const x = r() * W, y = H * (0.55 + r() * 0.4);
+      if (ph < 0.12) { g.globalAlpha = 1 - ph / 0.12; const fl = g.createRadialGradient(x, y, 0, x, y, 40 * s); fl.addColorStop(0, '#fff'); fl.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = fl; g.fillRect(x - 40 * s, y - 40 * s, 80 * s, 80 * s); }
+    }
+    g.globalAlpha = 1;
+  },
+  plate(p, u, cx, cy) {
+    const s = u * (S.vertical ? 1 : 0.85);
+    shadow(cx + 20 * s, cy + 30 * s, 260 * s, 250 * s, 0.5);
+    g.save(); g.translate(cx, cy); g.rotate(p * TAU / 3);
+    g.fillStyle = '#f4efe6'; g.beginPath(); g.arc(0, 0, 230 * s, 0, TAU); g.fill();
+    g.fillStyle = '#e6dfd2'; g.beginPath(); g.arc(0, 0, 180 * s, 0, TAU); g.fill();
+    const r = rng(5), cols = S.ingredients;
+    for (let i = 0; i < 46; i++) {
+      const a = r() * TAU, d = r() * 150 * s, rr = (10 + r() * 22) * s;
+      g.fillStyle = cols[i % cols.length]; g.beginPath(); g.ellipse(Math.cos(a) * d, Math.sin(a) * d, rr, rr * 0.7, a, 0, TAU); g.fill();
+    }
+    g.restore();
+    // garnish falling
+    const r2 = rng(9);
+    for (let i = 0; i < 12; i++) {
+      const ph = (p + r2()) % 1; const x = cx + (r2() - 0.5) * 300 * s; const y = cy - 400 * s + ph * 420 * s;
+      g.globalAlpha = Math.sin(ph * Math.PI); g.fillStyle = '#7bbf5a';
+      g.beginPath(); g.ellipse(x, y, 8 * s, 4 * s, ph * 6, 0, TAU); g.fill();
+    }
+    g.globalAlpha = 1;
+  },
+  rings(p, u, cx, cy) {
+    const s = u;
+    for (let i = 0; i < 6; i++) {
+      const ph = (p + i / 6) % 1;
+      g.strokeStyle = `rgba(255,255,255,${0.5 * (1 - ph)})`; g.lineWidth = 2 * s;
+      g.beginPath(); g.arc(cx, cy, 40 * s + ph * Math.max(W, H) * 0.7, 0, TAU); g.stroke();
+    }
+    // constellation
+    const r = rng(21), pts = [];
+    for (let i = 0; i < 9; i++) pts.push([W * (0.1 + r() * 0.8) + wave(p, 1, r()) * 8 * s, H * (0.12 + r() * 0.76) + wave(p, 1, r()) * 8 * s]);
+    g.strokeStyle = 'rgba(255,255,255,.28)'; g.lineWidth = 1.2 * s; g.beginPath();
+    const n = Math.floor(ease(Math.min(1, p * 2)) * (pts.length - 1));
+    for (let i = 0; i <= n; i++) i ? g.lineTo(...pts[i]) : g.moveTo(...pts[i]);
+    g.stroke();
+    pts.forEach(([x, y]) => { g.fillStyle = '#fff'; g.shadowColor = '#fff'; g.shadowBlur = 12 * s; g.beginPath(); g.arc(x, y, 3.5 * s, 0, TAU); g.fill(); });
+    g.shadowBlur = 0;
+    // confetti
+    const r3 = rng(17);
+    for (let i = 0; i < 60; i++) {
+      const ph = (p + r3()) % 1, x = r3() * W, y = -20 * s + ph * (H + 40 * s);
+      g.save(); g.translate(x + Math.sin(ph * 12 + i) * 20 * s, y); g.rotate(ph * 10 + i);
+      g.fillStyle = S.confetti[i % S.confetti.length]; g.fillRect(-5 * s, -2.5 * s, 10 * s, 5 * s); g.restore();
+    }
+  },
+  fabric(p, u) {
+    // cinematic light travelling across woven folds
+    for (let i = 0; i < 18; i++) {
+      const y = (i / 18) * H;
+      const lg = g.createLinearGradient(0, y, 0, y + H / 18);
+      const v = 0.5 + 0.5 * Math.sin(i * 0.9 + p * TAU);
+      lg.addColorStop(0, `rgba(255,255,255,${0.02 + 0.08 * v})`); lg.addColorStop(1, 'rgba(0,0,0,.18)');
+      g.fillStyle = lg;
+      g.beginPath(); g.moveTo(0, y);
+      for (let x = 0; x <= W; x += 20) g.lineTo(x, y + Math.sin(x * 0.006 + i + p * TAU) * 18 * u);
+      g.lineTo(W, y + H / 18 + 20 * u); g.lineTo(0, y + H / 18 + 20 * u); g.fill();
+    }
+    const lx = ((p * 1.2) % 1.2 - 0.1) * W;
+    const lg = g.createRadialGradient(lx, H * 0.4, 0, lx, H * 0.4, W * 0.4);
+    lg.addColorStop(0, 'rgba(255,255,255,.35)'); lg.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = lg; g.fillRect(0, 0, W, H);
+  },
+};
+
+function title(p, u) {
+  if (!S.title) return;
+  const a = S.titleAlways ? 1 : win(p, S.titleIn ?? 0.05, S.titleOut ?? 0.95);
+  g.save(); g.globalAlpha = a; g.textAlign = 'center'; g.textBaseline = 'middle';
+  const size = (S.titleSize || 92) * u;
+  g.font = `${size}px Display`; g.fillStyle = '#fff';
+  g.shadowColor = 'rgba(0,0,0,.35)'; g.shadowBlur = 30 * u;
+  const y = S.titleY * H + (1 - a) * 20 * u;
+  g.fillText(S.title, W / 2, y);
+  if (S.subtitle) { g.font = `${size * 0.3}px Sans`; g.fillStyle = 'rgba(255,255,255,.85)'; g.fillText(S.subtitle, W / 2, y + size * 0.85); }
+  g.restore();
+}
+
+window.draw = (t, f) => {
+  const p = (t / S.duration) % 1;
+  const u = Math.min(W, H) / 540;
+  background(p);
+  const cx = W * (S.cx ?? 0.5), cy = H * (S.cy ?? 0.52);
+  (S.motifs || [S.motif]).forEach((m) => motifs[m](p, u, cx, cy));
+  title(p, u);
+  finish(p, f);
+};
+window.frame = (q) => c.toDataURL('image/jpeg', q);
+window.ready = document.fonts.load('40px Display').then(() => document.fonts.load('20px Sans'));
+</script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+import type { Locale } from './types';
+
+/** Interface copy. Kept deliberately short — the media does the talking. */
+const ar = {
+  meta: {
+    title: 'صيت AI | وكالة إبداعية لتسويق المؤثرين والمحتوى',
+    description: 'صيت AI وكالة تسويق إبداعية: حملات المؤثرين والمشاهير، محتوى UGC، وإنتاج إعلاني — المؤثر المناسب لمشروعك، لا الأكثر متابعين.',
+  },
+  brand: 'صيت',
+  tagline: 'وكالة تسويق المؤثرين والمحتوى الإبداعي',
+  nav: { work: 'الأعمال', creators: 'المؤثرون', ugc: 'UGC', services: 'ما يميزنا', method: 'كيف نختار', clients: 'عملاؤنا' },
+  langSwitch: { label: 'EN', aria: 'English version', href: '/en/' },
+  cta: { start: 'ابدأ حملتك', join: 'انضم كمؤثر' },
+  skip: 'تخطَّ إلى المحتوى',
+  hero: {
+    eyebrow: 'حملات · مؤثرون · UGC · إنتاج',
+    titleA: 'المؤثر المناسب لمشروعك،',
+    titleB: 'لا الأكثر متابعين.',
+    lead: 'نصنع حملات تُشاهَد: مؤثرون، مشاهير، محتوى UGC، وإنتاج إعلاني بفكرة لكل مؤثر.',
+    tap: 'اضغط على أي شاشة للمشاهدة',
+    scroll: 'مرّر',
+  },
+  featured: { kicker: '٠٢ — حملات مختارة', title: 'الصورة تقول أكثر.' },
+  creators: { kicker: '٠٣ — مؤثرون ومشاهير', title: 'كل مؤثر بلغته.', note: 'مساحات مخصصة لتعاونات حقيقية مصرّح بها' },
+  gallery: { kicker: '٠٤ — معرض UGC', title: 'محتوى يشبه جمهورك.', all: 'الكل', count: (n: number) => `${n} عمل`, empty: 'لا يوجد محتوى في هذا التصنيف بعد.' },
+  production: { kicker: '٠٥ — إنتاج إبداعي', title: 'من الفكرة إلى الشاشة.', items: ['أفلام إعلانية', 'ريلز', 'تصوير منتجات', 'تغطية فعاليات'] },
+  services: { kicker: '٠٦ — ما يميزنا', title: 'من إدارة المؤثرين إلى استراتيجية كاملة.', instead: 'بدل', equation: ['الجمهور', 'المؤثر', 'الهدف', 'استراتيجية حملة كاملة'] },
+  method: { kicker: 'كيف نختار المؤثر', title: 'أربع خطوات قبل أي ترشيح', principle: 'حتى يكون الاختيار مبنيًا على المشروع، لا على الأرقام وحدها.' },
+  numbers: { kicker: 'بالأرقام', title: 'ماذا عملنا خلال الفترة التجريبية؟' },
+  clients: { kicker: 'عملاؤنا', title: 'مشاريع عملنا معها' },
+  contact: {
+    kicker: '٠٧ — ابدأ حملتك',
+    titleA: 'هل تبحث عن مؤثر',
+    lead: 'أخبرنا عن مشروعك، ونرشّح لك المؤثرين المناسبين.',
+    brands: { tag: '01 · لأصحاب المشاريع', title: 'ابدأ حملتك', body: 'أخبرنا عن احتياج مشروعك، ونرشّح لك المؤثرين المناسبين.' },
+    creators: { tag: '02 · للمؤثرين', title: 'انضم كمؤثر', body: 'انضم إلى المؤثرين الذين نرشّحهم للمشاريع المناسبة لمحتواهم وجمهورهم.' },
+  },
+  footer: { line: 'INFLUENCER MARKETING AGENCY', rights: 'جميع الحقوق محفوظة' },
+  media: {
+    placeholder: 'نموذج مؤقت',
+    play: 'تشغيل',
+    pause: 'إيقاف مؤقت',
+    mute: 'كتم الصوت',
+    unmute: 'تشغيل الصوت',
+    open: (t: string) => `مشاهدة: ${t}`,
+    close: 'إغلاق',
+    next: 'التالي',
+    prev: 'السابق',
+    failed: 'تعذّر تحميل المقطع',
+    fullscreen: 'ملء الشاشة',
+  },
+};
+
+export type Copy = typeof ar;
+
+const en: Copy = {
+  meta: {
+    title: 'Sayt AI | Creative influencer & content marketing agency',
+    description: 'Sayt AI is a creative marketing agency: influencer and celebrity campaigns, UGC ads and commercial production — the right influencer for your project, not the most followed.',
+  },
+  brand: 'Sayt',
+  tagline: 'Influencer & creative content agency',
+  nav: { work: 'Work', creators: 'Creators', ugc: 'UGC', services: 'What sets us apart', method: 'How we choose', clients: 'Clients' },
+  langSwitch: { label: 'ع', aria: 'النسخة العربية', href: '/' },
+  cta: { start: 'Start your campaign', join: 'Join as an influencer' },
+  skip: 'Skip to content',
+  hero: {
+    eyebrow: 'Campaigns · Creators · UGC · Production',
+    titleA: 'The right influencer for your project,',
+    titleB: 'not the most followed.',
+    lead: 'We make campaigns people watch: influencers, celebrities, UGC and commercial production — a distinct idea for every creator.',
+    tap: 'Tap any screen to watch',
+    scroll: 'Scroll',
+  },
+  featured: { kicker: '02 — Selected campaigns', title: 'Let the picture speak.' },
+  creators: { kicker: '03 — Influencers & celebrities', title: 'Every creator, in their own voice.', note: 'Reserved for real, authorised collaborations' },
+  gallery: { kicker: '04 — UGC gallery', title: 'Content that looks like your audience.', all: 'All', count: (n: number) => `${n} pieces`, empty: 'Nothing in this category yet.' },
+  production: { kicker: '05 — Creative production', title: 'From idea to screen.', items: ['Commercials', 'Reels', 'Product photography', 'Event coverage'] },
+  services: { kicker: '06 — What sets us apart', title: 'From managing influencers to a complete strategy.', instead: 'Instead of', equation: ['Audience', 'Influencer', 'Goal', 'A complete campaign strategy'] },
+  method: { kicker: 'How we choose', title: 'Four steps before any recommendation', principle: 'So the choice is based on the project, not on numbers alone.' },
+  numbers: { kicker: 'By the numbers', title: 'What we achieved in the trial period' },
+  clients: { kicker: 'Clients', title: 'Brands we’ve worked with' },
+  contact: {
+    kicker: '07 — Start your campaign',
+    titleA: 'Looking for an influencer',
+    lead: 'Tell us about your project, and we’ll recommend the right influencers.',
+    brands: { tag: '01 · For business owners', title: 'Start your campaign', body: 'Tell us what your project needs, and we’ll recommend the right influencers.' },
+    creators: { tag: '02 · For influencers', title: 'Join as an influencer', body: 'Join the influencers we recommend to projects that suit their content and audience.' },
+  },
+  footer: { line: 'INFLUENCER MARKETING AGENCY', rights: 'All rights reserved' },
+  media: {
+    placeholder: 'Placeholder',
+    play: 'Play',
+    pause: 'Pause',
+    mute: 'Mute',
+    unmute: 'Unmute',
+    open: (t: string) => `Watch: ${t}`,
+    close: 'Close',
+    next: 'Next',
+    prev: 'Previous',
+    failed: 'Couldn’t load this clip',
+    fullscreen: 'Fullscreen',
+  },
+};
+
+export const copy: Record<Locale, Copy> = { ar, en };

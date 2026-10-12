@@ -14,3 +14,9 @@
 - سحب وإفلات بالفأرة واللمس، مؤثرات صوتية، دعم كامل للعربية و RTL.
 
 بُنيت بمساعدة Claude Code.
+
+---
+
+## Sayt.Ai website (v2)
+
+The redesigned Sayt.Ai agency website lives in [`sayt-ai/`](./sayt-ai), with its own README and media replacement list.
