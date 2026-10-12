@@ -137,14 +137,6 @@
 .no-scrollbar { scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 
-/* final chapter: a sand fill sweeps in from the reading start on hover */
-.way::before {
-  content: ''; position: absolute; inset: 0 -1.25rem; background: var(--color-sand);
-  transform: scaleX(0); transform-origin: right; transition: transform .7s var(--ease-cine);
-}
-[dir='ltr'] .way::before { transform-origin: left; }
-.way:hover::before, .way:focus-visible::before { transform: scaleX(1); }
-
 /* the Sayt mark's arcs carrying outward */
 .signal-arc { animation: signal 2.8s var(--ease-cine) infinite; }
 .signal-arc-2 { animation-delay: .35s; }

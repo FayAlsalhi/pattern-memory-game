@@ -13,8 +13,8 @@ import { Icon } from '../ui/Icon';
 import { SignalMark } from '../ui/SignalMark';
 
 /**
- * The last chapter: the original "looking for an influencer…" question, two
- * ways in written as large lines rather than cards, then the sign-off — the
+ * The last chapter: the original "looking for an influencer…" question, the
+ * two entry cards, then the sign-off — the
  * name itself, huge, with the mark's arcs carrying outward. صيت means
  * reputation that travels; the ending is built on that.
  */
@@ -36,7 +36,7 @@ export function Contact() {
 
   return (
     <section id="contact" aria-labelledby="contact-title" className="relative isolate overflow-hidden pt-28 md:pt-40">
-      <div aria-hidden className="absolute inset-x-0 top-0 -z-10 h-[110vh] opacity-20">
+      <div aria-hidden className="absolute inset-x-0 top-0 -z-10 h-[110vh] opacity-35">
         <Media item={byId('film-brand')} />
         <div className="absolute inset-0 bg-gradient-to-b from-ink-950 via-ink-950/50 to-ink-950" />
       </div>
@@ -64,24 +64,33 @@ export function Contact() {
           <p className="mt-6 max-w-lg text-lg leading-8 text-white/70">{c.contact.lead}</p>
         </Reveal>
 
-        <ul className="mt-16 border-t border-white/15">
-          {ways.map((w) => (
-            <li key={w.tag} className="border-b border-white/15">
-              <a href={w.href} target="_blank" rel="noopener" className="way group relative grid grid-cols-[1fr_auto] items-center gap-6 py-8 md:grid-cols-[12rem_1fr_auto] md:py-10">
-                <span className="relative text-sm text-white/50 transition-colors duration-500 group-hover:text-ink-900/60 max-md:col-span-2">{w.tag}</span>
-                <span className="relative min-w-0">
-                  <span className="block font-display text-[clamp(2.2rem,6vw,5rem)] leading-[1.1] transition-colors duration-500 group-hover:text-ink-900">{w.title}</span>
-                  <span className="mt-2 block max-w-xl leading-7 text-white/60 transition-colors duration-500 group-hover:text-ink-900/70">{w.body}</span>
-                </span>
-                <span className="relative grid h-14 w-14 place-items-center rounded-full border border-white/30 transition-all duration-500 group-hover:border-ink-900 group-hover:bg-ink-900 md:h-20 md:w-20">
-                  <Icon name="arrow" className="rtl:rotate-180 h-6 w-6" />
+        <div className="mt-14 grid gap-5 md:grid-cols-2">
+          {ways.map((card, k) => (
+            <Reveal key={card.tag} delay={k * 0.1}>
+              <a
+                href={card.href}
+                target="_blank"
+                rel="noopener"
+                className={`group flex min-h-[220px] flex-col justify-between rounded-[32px] p-8 transition-[transform,background] duration-500 ease-[var(--ease-cine)] hover:-translate-y-1 md:p-10 ${
+                  k === 0 ? 'bg-white text-ink-900' : 'border border-white/15 bg-white/[.04] backdrop-blur-xl hover:bg-white/[.08]'
+                }`}
+              >
+                <span className={`text-sm ${k === 0 ? 'text-ink-900/60' : 'text-white/55'}`}>{card.tag}</span>
+                <span className="flex items-end justify-between gap-6">
+                  <span>
+                    <span className="block font-display text-[clamp(2rem,4vw,3.2rem)] leading-tight">{card.title}</span>
+                    <span className={`mt-2 block max-w-sm leading-7 ${k === 0 ? 'text-ink-900/70' : 'text-white/65'}`}>{card.body}</span>
+                  </span>
+                  <span className={`grid h-14 w-14 shrink-0 place-items-center rounded-full transition-transform duration-500 group-hover:scale-110 ${k === 0 ? 'bg-ink-900 text-white' : 'bg-white text-ink-900'}`}>
+                    <Icon name="arrow" className="rtl:rotate-180" />
+                  </span>
                 </span>
               </a>
-            </li>
+            </Reveal>
           ))}
-        </ul>
+        </div>
 
-        <ul className="mt-8 flex flex-wrap gap-x-8 gap-y-3 text-sm text-white/55">
+        <ul className="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm text-white/55">
           {trust.map((x) => (
             <li key={x.value} className="flex items-center gap-2"><span className="font-semibold text-sky" dir="ltr">{x.value}</span>{t(x.label)}</li>
           ))}

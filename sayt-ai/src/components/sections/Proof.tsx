@@ -1,10 +1,7 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
 import { useLocale } from '@/lib/locale';
 import { asset } from '@/lib/asset';
-import { useFinePointer } from '@/lib/useReducedMotion';
 import { clients, stats } from '@/content/site';
 import { CountUp, Reveal } from '../ui/primitives';
 import { SignalMark } from '../ui/SignalMark';
@@ -50,73 +47,24 @@ export function Numbers() {
   );
 }
 
-/**
- * Clients as an editorial index of names. On desktop the logo follows the
- * pointer over the hovered name; on touch every name carries its logo inline.
- */
+/** Brands we've worked with — the client logos, as on the original site. */
 export function Clients() {
   const { c, t } = useLocale();
-  const fine = useFinePointer();
-  const [active, setActive] = useState<number | null>(null);
-  const box = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState({ x: 0, y: 0 });
-
-  /** Float the logo just above the hovered or focused name. */
-  const show = (i: number, el: HTMLElement) => {
-    const r = box.current?.getBoundingClientRect();
-    const e = el.getBoundingClientRect();
-    if (r) setPos({ x: e.left - r.left + e.width / 2, y: e.top - r.top });
-    setActive(i);
-  };
-
+  const row = [...clients, ...clients];
   return (
     <section id="clients" aria-labelledby="clients-title" className="relative scroll-mt-20 py-24 md:py-32">
       <div className="mx-auto max-w-[1400px] px-5 md:px-8">
-        <Reveal className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="kicker mb-4">{c.clients.kicker}</p>
-            <h2 id="clients-title" className="font-display text-[clamp(2rem,4.4vw,3.6rem)]">{c.clients.title}</h2>
-          </div>
-          {fine && <p className="text-sm text-white/40">{c.clients.hint}</p>}
+        <Reveal>
+          <p className="kicker mb-4">{c.clients.kicker}</p>
+          <h2 id="clients-title" className="font-display text-[clamp(2rem,4.4vw,3.6rem)]">{c.clients.title}</h2>
         </Reveal>
-
-        <div ref={box} onPointerLeave={() => setActive(null)} className="relative mt-12 border-t border-white/10 pt-10">
-          <ul className="flex flex-wrap items-center gap-x-[clamp(1rem,2.4vw,2.5rem)] gap-y-4 md:gap-y-6">
-            {clients.map((cl, i) => (
-              <li key={cl.logo} className="flex items-center gap-[clamp(1rem,2.4vw,2.5rem)]">
-                <span
-                  tabIndex={fine ? 0 : undefined}
-                  onPointerEnter={(e) => show(i, e.currentTarget)}
-                  onFocus={(e) => show(i, e.currentTarget)}
-                  onBlur={() => setActive(null)}
-                  className={`flex items-center gap-3 font-display text-[clamp(1.7rem,4.6vw,4.4rem)] leading-tight transition-colors duration-300 outline-none focus-visible:underline ${active === null || active === i ? 'text-white' : 'text-white/25'}`}
-                >
-                  {!fine && <img src={asset(cl.logo)} alt="" width={44} height={44} loading="lazy" className="h-11 w-11 shrink-0 rounded-xl object-cover" />}
-                  {t(cl.name)}
-                </span>
-                {i < clients.length - 1 && <span aria-hidden className="text-[clamp(1rem,2vw,2rem)] text-sky/60">✦</span>}
-              </li>
-            ))}
-          </ul>
-
-          {fine && (
-            <div aria-hidden className="pointer-events-none absolute z-10 transition-[left,top] duration-300 ease-[var(--ease-cine)]" style={{ left: pos.x, top: pos.y }}>
-              <AnimatePresence>
-                {active !== null && (
-                  <motion.img
-                    key={active}
-                    src={asset(clients[active].logo)}
-                    alt=""
-                    initial={{ opacity: 0, scale: 0.8, rotate: -8, y: 10 }}
-                    animate={{ opacity: 1, scale: 1, rotate: -3, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.25 }}
-                    className="absolute -left-[4.5rem] -top-40 h-36 w-36 max-w-none rounded-[28px] object-cover shadow-[0_30px_60px_-15px_rgba(0,0,0,.8)] ring-1 ring-white/20"
-                  />
-                )}
-              </AnimatePresence>
-            </div>
-          )}
+      </div>
+      <ul className="sr-only">{clients.map((x) => <li key={x.logo}>{t(x.name)}</li>)}</ul>
+      <div aria-hidden className="relative mt-12 overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
+        <div className="marquee gap-5 [--marquee-speed:45s]">
+          {row.map((x, i) => (
+            <img key={i} src={asset(x.logo)} alt="" loading="lazy" width={160} height={160} className="h-28 w-28 shrink-0 rounded-3xl object-cover ring-1 ring-white/10 md:h-36 md:w-36" />
+          ))}
         </div>
       </div>
     </section>
