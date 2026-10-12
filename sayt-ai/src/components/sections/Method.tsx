@@ -148,7 +148,7 @@ const layouts = {
   ],
   compact: [
     { cls: 'right-[3%] top-[8%] w-[51%] -rotate-2', pin: [72, 9] },
-    { cls: 'left-[3%] top-[7%] w-[44%] rotate-[1.5deg]', pin: [25, 8] },
+    { cls: 'left-[4%] top-[7%] w-[38%] rotate-[1.5deg]', pin: [23, 8] },
     { cls: 'right-[3%] bottom-[4%] w-[50%] rotate-[2.5deg]', pin: [72, 73] },
     { cls: 'left-[3%] bottom-[5%] w-[48%] -rotate-[2.5deg]', pin: [27, 76] },
   ],
@@ -162,7 +162,7 @@ function Board({ progress, step, compact = false, complete = false }: { progress
   const threads = complete ? 1 : live;
   const center = complete ? 1 : centerLive;
   const centerScale = useTransform(centerLive, [0, 1], [0.85, 1]);
-  const centerY = compact ? 47 : 46;
+  const centerY = compact ? 53 : 46;
 
   return (
     <div className={`relative w-full overflow-hidden rounded-[24px] bg-ink-800/80 shadow-[inset_0_0_80px_rgba(0,0,0,.55)] ring-1 ring-white/10 lg:rounded-[28px] ${complete ? (compact ? 'aspect-[3/4] max-h-[80vh]' : 'aspect-[16/10]') : 'h-full'}`}>
@@ -202,7 +202,7 @@ function Board({ progress, step, compact = false, complete = false }: { progress
 
       <motion.div
         style={{ opacity: center, scale: complete ? 1 : centerScale, top: `${centerY}%` }}
-        className={`absolute left-1/2 z-20 -translate-x-1/2 -translate-y-1/2 ${compact ? 'w-[64%]' : 'w-[34%]'}`}
+        className={`absolute left-1/2 z-20 -translate-x-1/2 -translate-y-1/2 ${compact ? 'w-[48%]' : 'w-[34%]'}`}
       >
         <Outcome compact />
       </motion.div>
@@ -233,15 +233,15 @@ function Note({ i, compact }: { i: number; compact: boolean }) {
   if (i === 1) {
     const frames = ['influencer-lifestyle', 'social-food', 'influencer-day', 'ugc-coffee', 'celebrity-launch', 'ugc-tea'];
     return (
-      <div className={`rounded-[4px] bg-[#0b0b10] shadow-xl ${compact ? 'p-1.5' : 'p-2.5'}`}>
-        <div className={`grid grid-cols-3 ${compact ? 'gap-1' : 'gap-1.5'}`}>
+      <div className={`rounded-[4px] bg-[#0b0b10] shadow-xl ${compact ? 'p-2' : 'p-2.5'}`}>
+        <div className={`grid grid-cols-3 ${compact ? 'gap-1.5' : 'gap-2'}`}>
           {frames.map((f, k) => (
             <div key={f} className={`relative aspect-[3/4] overflow-hidden rounded-[2px] ${k === 0 ? 'ring-2 ring-sky ring-offset-1 ring-offset-[#0b0b10] lg:ring-offset-2' : 'opacity-60 grayscale'}`}>
               <img src={asset(`media/posters/${f}.jpg`)} alt="" loading="lazy" className="h-full w-full object-cover" />
             </div>
           ))}
         </div>
-        <p className={`px-1 pt-1.5 text-sky ${compact ? 'text-[11px]' : 'pt-2 text-xs'}`}>✓ {n.content}</p>
+        <p className={`px-1 pt-1.5 text-sky ${compact ? 'truncate text-[10px]' : 'pt-2 text-xs'}`}>✓ {n.content}</p>
       </div>
     );
   }
