@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useLocale } from '@/lib/locale';
-import { asset, href } from '@/lib/asset';
+import { asset, langHref } from '@/lib/asset';
 import { links } from '@/content/site';
 import { Icon } from './ui/Icon';
 
@@ -57,7 +57,7 @@ export function Header() {
           ))}
         </nav>
         <div className="ms-auto flex items-center gap-2">
-          <a href={href(c.langSwitch.href)} aria-label={c.langSwitch.aria} className="ctl text-[13px] font-semibold" hrefLang={c.langSwitch.href === '/' ? 'ar' : 'en'}>
+          <a href={langHref(c.langSwitch.href)} aria-label={c.langSwitch.aria} className="ctl text-[13px] font-semibold" hrefLang={c.langSwitch.href === '/' ? 'ar' : 'en'}>
             {c.langSwitch.label}
           </a>
           <a href={links.startCampaign} target="_blank" rel="noopener" className="btn-primary hidden min-h-[44px] px-5 text-[15px] sm:inline-flex">{c.cta.start}</a>

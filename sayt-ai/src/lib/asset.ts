@@ -8,3 +8,10 @@ export const asset = (p: string) => `${assetBase}/${p.replace(/^\//, '')}`;
 
 /** Locale-aware internal href ("/en/" or "/"). */
 export const href = (p: string) => `${basePath}${p}`;
+
+/**
+ * Link to the other language. With relative assets (a flat static host where
+ * both pages sit side by side as index.html and en.html) it links the files.
+ */
+export const langHref = (p: string) =>
+  assetBase === '.' ? (p === '/' ? 'index.html' : 'en.html') : href(p);

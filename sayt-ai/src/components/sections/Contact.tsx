@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useScroll, useTransform } from 'motion/react';
 import { useLocale } from '@/lib/locale';
-import { href } from '@/lib/asset';
+import { langHref } from '@/lib/asset';
 import { usePrefersReducedMotion } from '@/lib/useReducedMotion';
 import { byId } from '@/content/media';
 import { links, trust, typewriter } from '@/content/site';
@@ -128,7 +128,7 @@ function Footer() {
           <ul className="grid gap-2.5">
             <li><a href={links.startCampaign} target="_blank" rel="noopener" className="text-sky hover:text-white">{c.cta.start}</a></li>
             <li><a href={links.joinAsInfluencer} target="_blank" rel="noopener" className="text-white/70 hover:text-white">{c.cta.join}</a></li>
-            <li><a href={href(c.langSwitch.href)} className="text-white/70 hover:text-white">{c.langSwitch.aria}</a></li>
+            <li><a href={langHref(c.langSwitch.href)} className="text-white/70 hover:text-white">{c.langSwitch.aria}</a></li>
           </ul>
         </div>
       </div>
