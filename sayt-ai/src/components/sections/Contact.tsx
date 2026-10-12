@@ -108,7 +108,7 @@ function Footer() {
   const reduced = usePrefersReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end end'] });
   const rise = useTransform(scrollYProgress, [0, 1], [reduced ? '0%' : '35%', '0%']);
-  const nav = [['#work', c.nav.work], ['#creators', c.nav.creators], ['#ugc', c.nav.ugc], ['#services', c.nav.services], ['#method', c.nav.method], ['#clients', c.nav.clients]] as const;
+  const nav = [['#work', c.nav.work], ['#creators', c.nav.creators], ['#services', c.nav.services], ['#method', c.nav.method], ['#clients', c.nav.clients]] as const;
 
   return (
     <footer ref={ref} className="relative mt-32 md:mt-44">

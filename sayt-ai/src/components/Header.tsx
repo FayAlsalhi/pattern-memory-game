@@ -42,7 +42,6 @@ export function Header() {
   const nav = [
     ['#work', c.nav.work],
     ['#creators', c.nav.creators],
-    ['#ugc', c.nav.ugc],
     ['#services', c.nav.services],
     ['#method', c.nav.method],
     ['#clients', c.nav.clients],

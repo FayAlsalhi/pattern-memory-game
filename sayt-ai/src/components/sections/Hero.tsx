@@ -58,9 +58,6 @@ export function Hero() {
     <section ref={section} id="top" className="relative isolate min-h-[100svh] overflow-hidden pt-[72px]">
       <div className="mx-auto grid min-h-[calc(100svh-72px)] max-w-[1400px] items-center gap-6 px-5 pb-10 md:px-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-4">
         <motion.div style={{ y: textY, opacity: textOpacity }} className="relative z-10 pt-6 text-center lg:pt-0 lg:text-start">
-          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1 }} className="kicker mb-5">
-            {c.hero.eyebrow}
-          </motion.p>
           <h1 className={`font-display leading-[1.12] tracking-[-0.01em] ${rtl ? 'text-[clamp(2.4rem,5.6vw,4.8rem)]' : 'text-[clamp(2.2rem,4.4vw,3.9rem)]'}`}>
             <motion.span className="block" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}>
               {c.hero.titleA}
@@ -69,9 +66,6 @@ export function Hero() {
               {c.hero.titleB}
             </motion.span>
           </h1>
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.6 }} className="mx-auto mt-6 max-w-md text-lg leading-8 text-white/70 lg:mx-0">
-            {c.hero.lead}
-          </motion.p>
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.75 }} className="mt-9 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
             <a href={links.startCampaign} target="_blank" rel="noopener" className="btn-primary text-lg">
               {c.cta.start}

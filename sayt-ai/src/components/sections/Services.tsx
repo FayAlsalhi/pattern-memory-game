@@ -25,7 +25,6 @@ export function Services() {
     <section id="services" aria-labelledby="services-title" className="relative py-24 md:py-36">
       <div className="mx-auto max-w-[1400px] px-5 md:px-8">
         <SectionHeading id="services-title" kicker={c.services.kicker} title={c.services.title} />
-        <Reveal delay={0.1}><p className="mt-6 max-w-2xl text-lg leading-8 text-white/65">{c.services.lead}</p></Reveal>
 
         <BriefDesk />
 
@@ -71,7 +70,6 @@ function BriefDesk() {
   return (
     <div className="mt-16 grid items-start gap-12 md:mt-24 lg:grid-cols-12 lg:gap-16">
       <Reveal className="lg:col-span-5">
-        <p className="kicker mb-4">{b.kicker}</p>
         <h3 className="font-display text-[clamp(1.9rem,3.6vw,3.2rem)] leading-[1.2] [text-wrap:balance]">{b.title}</h3>
         <p className="mt-5 max-w-md leading-8 text-white/65">{b.lead}</p>
 
