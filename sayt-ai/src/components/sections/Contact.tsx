@@ -1,17 +1,23 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
+import { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion, useScroll, useTransform } from 'motion/react';
 import { useLocale } from '@/lib/locale';
+import { href } from '@/lib/asset';
 import { usePrefersReducedMotion } from '@/lib/useReducedMotion';
 import { byId } from '@/content/media';
 import { links, trust, typewriter } from '@/content/site';
 import { Media } from '../media/Media';
 import { Reveal } from '../ui/primitives';
 import { Icon } from '../ui/Icon';
-import { Logo } from '../Header';
+import { SignalMark } from '../ui/SignalMark';
 
-/** Scene 07 — cinematic close with the campaign inquiry. */
+/**
+ * The last chapter: the original "looking for an influencer…" question, two
+ * ways in written as large lines rather than cards, then the sign-off — the
+ * name itself, huge, with the mark's arcs carrying outward. صيت means
+ * reputation that travels; the ending is built on that.
+ */
 export function Contact() {
   const { c, t, rtl } = useLocale();
   const reduced = usePrefersReducedMotion();
@@ -23,17 +29,16 @@ export function Contact() {
     return () => clearInterval(id);
   }, [reduced, words.length]);
 
-  const cards = [
-    { ...c.contact.brands, href: links.startCampaign, primary: true },
-    { ...c.contact.creators, href: links.joinAsInfluencer, primary: false },
+  const ways = [
+    { ...c.contact.brands, href: links.startCampaign },
+    { ...c.contact.creators, href: links.joinAsInfluencer },
   ];
 
   return (
-    <section id="contact" aria-labelledby="contact-title" className="relative isolate overflow-hidden pb-10 pt-28 md:pt-40">
-      {/* footage behind the final call to action */}
-      <div aria-hidden className="absolute inset-0 -z-10 opacity-35">
+    <section id="contact" aria-labelledby="contact-title" className="relative isolate overflow-hidden pt-28 md:pt-40">
+      <div aria-hidden className="absolute inset-x-0 top-0 -z-10 h-[110vh] opacity-20">
         <Media item={byId('film-brand')} />
-        <div className="absolute inset-0 bg-gradient-to-b from-ink-950 via-ink-950/40 to-ink-950" />
+        <div className="absolute inset-0 bg-gradient-to-b from-ink-950 via-ink-950/50 to-ink-950" />
       </div>
 
       <div className="mx-auto max-w-[1400px] px-5 md:px-8">
@@ -41,7 +46,7 @@ export function Contact() {
           <p className="kicker mb-6">{c.contact.kicker}</p>
           <h2 id="contact-title" className="font-display text-[clamp(2.6rem,8vw,7.5rem)] leading-[1.08]">
             {c.contact.titleA}
-            <span className="relative block h-[1.25em] overflow-hidden">
+            <span className="relative block h-[1.3em] overflow-hidden">
               <AnimatePresence mode="wait" initial={false}>
                 <motion.span
                   key={i}
@@ -59,59 +64,84 @@ export function Contact() {
           <p className="mt-6 max-w-lg text-lg leading-8 text-white/70">{c.contact.lead}</p>
         </Reveal>
 
-        <div className="mt-14 grid gap-5 md:grid-cols-2">
-          {cards.map((card, k) => (
-            <Reveal key={card.tag} delay={k * 0.1}>
-              <a
-                href={card.href}
-                target="_blank"
-                rel="noopener"
-                className={`group flex min-h-[220px] flex-col justify-between rounded-[32px] p-8 transition-[transform,background] duration-500 ease-[var(--ease-cine)] hover:-translate-y-1 md:p-10 ${
-                  card.primary ? 'bg-white text-ink-900' : 'border border-white/15 bg-white/[.04] backdrop-blur-xl hover:bg-white/[.08]'
-                }`}
-              >
-                <span className={`text-sm ${card.primary ? 'text-ink-900/60' : 'text-white/55'}`}>{card.tag}</span>
-                <span className="flex items-end justify-between gap-6">
-                  <span>
-                    <span className="block font-display text-[clamp(2rem,4vw,3.2rem)] leading-tight">{card.title}</span>
-                    <span className={`mt-2 block max-w-sm leading-7 ${card.primary ? 'text-ink-900/70' : 'text-white/65'}`}>{card.body}</span>
-                  </span>
-                  <span className={`grid h-14 w-14 shrink-0 place-items-center rounded-full transition-transform duration-500 group-hover:scale-110 ${card.primary ? 'bg-ink-900 text-white' : 'bg-white text-ink-900'}`}>
-                    <Icon name="arrow" className="rtl:rotate-180" />
-                  </span>
+        <ul className="mt-16 border-t border-white/15">
+          {ways.map((w) => (
+            <li key={w.tag} className="border-b border-white/15">
+              <a href={w.href} target="_blank" rel="noopener" className="way group relative grid grid-cols-[1fr_auto] items-center gap-6 py-8 md:grid-cols-[12rem_1fr_auto] md:py-10">
+                <span className="relative text-sm text-white/50 transition-colors duration-500 group-hover:text-ink-900/60 max-md:col-span-2">{w.tag}</span>
+                <span className="relative min-w-0">
+                  <span className="block font-display text-[clamp(2.2rem,6vw,5rem)] leading-[1.1] transition-colors duration-500 group-hover:text-ink-900">{w.title}</span>
+                  <span className="mt-2 block max-w-xl leading-7 text-white/60 transition-colors duration-500 group-hover:text-ink-900/70">{w.body}</span>
+                </span>
+                <span className="relative grid h-14 w-14 place-items-center rounded-full border border-white/30 transition-all duration-500 group-hover:border-ink-900 group-hover:bg-ink-900 md:h-20 md:w-20">
+                  <Icon name="arrow" className="rtl:rotate-180 h-6 w-6" />
                 </span>
               </a>
-            </Reveal>
+            </li>
           ))}
-        </div>
+        </ul>
 
-        <ul className="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm text-white/60">
+        <ul className="mt-8 flex flex-wrap gap-x-8 gap-y-3 text-sm text-white/55">
           {trust.map((x) => (
             <li key={x.value} className="flex items-center gap-2"><span className="font-semibold text-sky" dir="ltr">{x.value}</span>{t(x.label)}</li>
           ))}
         </ul>
-
-        <Footer />
       </div>
+
+      <Footer />
     </section>
   );
 }
 
 function Footer() {
   const { c } = useLocale();
+  const ref = useRef<HTMLElement>(null);
+  const reduced = usePrefersReducedMotion();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end end'] });
+  const rise = useTransform(scrollYProgress, [0, 1], [reduced ? '0%' : '35%', '0%']);
+  const nav = [['#work', c.nav.work], ['#creators', c.nav.creators], ['#ugc', c.nav.ugc], ['#services', c.nav.services], ['#method', c.nav.method], ['#clients', c.nav.clients]] as const;
+
   return (
-    <footer className="mt-28 flex flex-col gap-8 border-t border-white/[.08] pt-10 md:flex-row md:items-center md:justify-between">
-      <div className="flex items-center gap-4">
-        <Logo />
-        <span className="hidden text-[11px] tracking-[.25em] text-white/40 sm:inline" dir="ltr">{c.footer.line}</span>
+    <footer ref={ref} className="relative mt-32 md:mt-44">
+      <div className="mx-auto grid max-w-[1400px] gap-12 px-5 md:grid-cols-12 md:px-8">
+        <div className="md:col-span-6">
+          <p className="font-display text-[clamp(2rem,4.4vw,3.6rem)] leading-[1.2] [text-wrap:balance]">{c.footer.statement}</p>
+          <p className="mt-4 max-w-md leading-8 text-white/55">{c.footer.sub}</p>
+        </div>
+        <nav aria-label={c.footer.explore} className="md:col-span-3">
+          <p className="mb-4 text-xs tracking-wider text-white/35">{c.footer.explore}</p>
+          <ul className="grid gap-2.5">
+            {nav.map(([h, l]) => <li key={h}><a href={h} className="text-white/70 transition-colors hover:text-white">{l}</a></li>)}
+          </ul>
+        </nav>
+        <div className="md:col-span-3">
+          <p className="mb-4 text-xs tracking-wider text-white/35">{c.footer.talk}</p>
+          <ul className="grid gap-2.5">
+            <li><a href={links.startCampaign} target="_blank" rel="noopener" className="text-sky hover:text-white">{c.cta.start}</a></li>
+            <li><a href={links.joinAsInfluencer} target="_blank" rel="noopener" className="text-white/70 hover:text-white">{c.cta.join}</a></li>
+            <li><a href={href(c.langSwitch.href)} className="text-white/70 hover:text-white">{c.langSwitch.aria}</a></li>
+          </ul>
+        </div>
       </div>
-      <nav aria-label="footer" className="flex flex-wrap gap-2">
-        {([['#services', c.nav.services], ['#method', c.nav.method], ['#clients', c.nav.clients]] as const).map(([h, l]) => (
-          <a key={h} href={h} className="rounded-full border border-white/10 px-4 py-2 text-sm text-white/70 hover:text-white">{l}</a>
-        ))}
-        <a href={links.startCampaign} target="_blank" rel="noopener" className="rounded-full border border-sky/50 px-4 py-2 text-sm text-sky">{c.cta.start}</a>
-      </nav>
-      <p className="text-xs text-white/35" dir="ltr">© {new Date().getFullYear()} Sayt AI · {c.footer.rights}</p>
+
+      {/* the sign-off: the name, cropped by the bottom of the page, arcs carrying outward */}
+      <div className="relative mt-20 overflow-hidden md:mt-28">
+        <motion.div style={{ y: rise }} className="mx-auto flex max-w-[1400px] items-end justify-center gap-[3vw] px-5 md:px-8" aria-hidden>
+          <span className="type-grain select-none font-display text-[min(36vw,30rem)] leading-[0.95] tracking-[-0.02em] [margin-bottom:-0.14em]">{c.brand}</span>
+          <SignalMark pulse className="mb-[3vw] h-[min(20vw,16rem)] shrink-0 text-sky" />
+        </motion.div>
+      </div>
+
+      <div className="relative border-t border-white/10 bg-ink-950/80 backdrop-blur">
+        <div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-4 px-5 py-6 text-xs text-white/40 md:px-8">
+          <p dir="ltr">© {new Date().getFullYear()} Sayt AI · {c.footer.rights}</p>
+          <p className="tracking-[.3em]" dir="ltr">{c.footer.line}</p>
+          <a href="#top" className="inline-flex items-center gap-2 text-white/60 hover:text-white">
+            {c.footer.top}
+            <Icon name="arrow" className="-rotate-90 h-4 w-4" />
+          </a>
+        </div>
+      </div>
     </footer>
   );
 }

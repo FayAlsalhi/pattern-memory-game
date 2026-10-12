@@ -6,9 +6,6 @@ import { useLocale } from '@/lib/locale';
 import { useMediaQuery, usePrefersReducedMotion } from '@/lib/useReducedMotion';
 import { byPlacement } from '@/content/media';
 import type { MediaItem } from '@/content/types';
-import { PhoneFrame } from '../media/PhoneFrame';
-import { Media, PlaceholderBadge } from '../media/Media';
-import { useViewer } from '../media/Viewer';
 import { MediaCard, SectionHeading } from '../ui/primitives';
 
 /**
@@ -69,19 +66,7 @@ export function Production() {
 }
 
 function Tile({ item, list }: { item: MediaItem; list: MediaItem[] }) {
-  const { c, t } = useLocale();
-  const { open } = useViewer();
-  if (item.aspect === '9:16') {
-    return (
-      <button type="button" onClick={() => open(list, list.indexOf(item))} aria-label={c.media.open(t(item.title))} className="w-[52vw] max-w-[230px] shrink-0 snap-center lg:w-[min(15vw,240px)]">
-        <PhoneFrame>
-          <Media item={item} />
-          <PlaceholderBadge item={item} className="absolute left-[7%] top-[8.5%] scale-90" />
-        </PhoneFrame>
-      </button>
-    );
-  }
-  const w = item.aspect === '16:9' ? 'w-[84vw] lg:w-[min(48vw,760px)]' : item.aspect === '1:1' ? 'w-[64vw] lg:w-[min(26vw,400px)]' : item.aspect === '5:4' ? 'w-[70vw] lg:w-[min(32vw,480px)]' : 'w-[60vw] lg:w-[min(24vw,380px)]';
+  const w = item.aspect === '9:16' ? 'w-[46vw] lg:w-[min(15vw,250px)]' : item.aspect === '16:9' ? 'w-[84vw] lg:w-[min(48vw,760px)]' : item.aspect === '1:1' ? 'w-[64vw] lg:w-[min(26vw,400px)]' : item.aspect === '5:4' ? 'w-[70vw] lg:w-[min(32vw,480px)]' : 'w-[60vw] lg:w-[min(24vw,380px)]';
   return (
     <div className={`${w} shrink-0 snap-center`}>
       <MediaCard item={item} list={list} />

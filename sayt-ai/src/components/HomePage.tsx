@@ -11,6 +11,8 @@ import { Gallery } from './sections/Gallery';
 import { Production } from './sections/Production';
 import { Services } from './sections/Services';
 import { Contact } from './sections/Contact';
+import { Method } from './sections/Method';
+import { Numbers, Clients } from './sections/Proof';
 
 /** The homepage as a continuous seven-scene story. */
 export function HomePage({ locale }: { locale: Locale }) {
@@ -29,6 +31,9 @@ export function HomePage({ locale }: { locale: Locale }) {
           <Gallery />
           <Production />
           <Services />
+          <Method />
+          <Numbers />
+          <Clients />
           <Contact />
         </main>
       </ViewerProvider>

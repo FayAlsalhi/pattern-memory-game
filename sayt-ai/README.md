@@ -3,8 +3,7 @@
 An Arabic-first, video-driven website for **Sayt.Ai (صيت AI)**, a creative
 agency for influencer, celebrity, UGC and campaign marketing.
 
-The guiding rule is *show, don't tell*. The homepage is one continuous,
-seven-scene visual story:
+The guiding rule is *show, don't tell*. The homepage is one continuous visual story:
 
 | # | Scene | What it does |
 |---|---|---|
@@ -13,8 +12,10 @@ seven-scene visual story:
 | 03 | Influencers & celebrities (`#creators`) | Portrait videos in phone mockups with parallax offsets, plus the 1050+ influencers count. |
 | 04 | UGC gallery (`#ugc`) | A masonry grid with category filters and animated transitions. Previews autoplay muted while in view, hovered tiles play first, and tap/click opens the viewer. |
 | 05 | Creative production | A strip of films, reels and photos. On desktop it is pinned and pans horizontally as you scroll; on touch it is a swipe rail. |
-| 06 | Services (`#services`, `#method`, `#clients`) | The original services with media examples, the "audience + influencer + goal" equation, the four-step method, the numbers and the client logos. |
-| 07 | Start your campaign (`#contact`) | Footage behind a large typographic CTA with the original rotating phrases, plus brand and creator entry points. |
+| 06 | What sets us apart (`#services`) | An interactive brief document: switch between three illustrative creators to see how each brief differs. Then the four original services as a typographic list. |
+| 07 | How we choose (`#method`) | A campaign board pinned on desktop that fills up as you scroll, showing the original four selection steps. Threads then pull them into one campaign. |
+| 08 | Numbers and clients (`#clients`) | The original numbers cards, and an editorial index of client names that shows each logo on hover or focus. |
+| 09 | Last chapter (`#contact`) | The original rotating question, two large ways in, and a sign-off built on the meaning of صيت: the wordmark with the logo's arcs pulsing. |
 
 ## Stack
 
