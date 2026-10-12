@@ -29,14 +29,15 @@ const ar = {
   production: { kicker: 'الإنتاج', title: 'نكتبها، نصوّرها، ونقصّها.', items: ['إعلانات', 'ريلز', 'تصوير منتجات', 'تغطية فعاليات'] },
   services: {
     kicker: 'وش يميزنا',
-    title: 'ما نكتفي بإدارة المؤثرين.',
+    title: 'ما نكتفي بإدارة المؤثرين،',
+    titleB: 'بل نبني قصصًا تصنع أثرًا حقيقيًا.',
     lead: 'لا نكتفي بربطك بالمؤثرين؛ نبني لحملتك استراتيجية كاملة حسب الجمهور والمؤثر والهدف.',
     instead: 'بدل',
   },
   brief: {
     kicker: 'Brief لكل مؤثر',
     title: 'ثلاثة مؤثرين، ثلاثة Briefs، ولا سطر مكرر.',
-    lead: 'نفس المنتج يوصل للجمهور من زوايا مختلفة، لأن كل مؤثر ياخذ فكرة مكتوبة على مقاسه.',
+    lead: 'نفس المنتج يوصل للجمهور من زوايا مختلفة، لأن لكل مؤثر لغة وفكرة مصممة على مقاسه.',
     sample: 'مثال توضيحي',
     doc: 'Brief الحملة',
     fields: { audience: 'جمهوره', voice: 'أسلوبه', idea: 'الفكرة', scenes: 'المشاهد', measure: 'وش نقيس' },
@@ -140,7 +141,8 @@ const en: Copy = {
   production: { kicker: 'Production', title: 'We write it, shoot it and cut it.', items: ['Commercials', 'Reels', 'Product photography', 'Event coverage'] },
   services: {
     kicker: 'What sets us apart',
-    title: 'Managing influencers is only the start.',
+    title: 'Managing influencers is only the start;',
+    titleB: 'we build stories that make a real impact.',
     lead: 'We don’t just connect you with influencers; we build your campaign a complete strategy around the audience, the influencer and the goal.',
     instead: 'Instead of',
   },

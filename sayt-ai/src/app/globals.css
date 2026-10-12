@@ -141,3 +141,31 @@
 .signal-arc { animation: signal 2.8s var(--ease-cine) infinite; }
 .signal-arc-2 { animation-delay: .35s; }
 @keyframes signal { 0%, 100% { opacity: .25; } 30% { opacity: 1; } 60% { opacity: .45; } }
+
+/* ------------------------------------------------------------------ */
+/*  Brief studio                                                       */
+/* ------------------------------------------------------------------ */
+.brief-gradient {
+  background: linear-gradient(to left, var(--color-sky) 0%, var(--color-lilac) 45%, #a78bfa 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+[dir='ltr'] .brief-gradient { background-image: linear-gradient(to right, var(--color-sky) 0%, var(--color-lilac) 45%, #a78bfa 100%); }
+.brief-glass {
+  background: linear-gradient(160deg, rgba(30, 34, 84, .62), rgba(12, 15, 48, .72));
+  border: 1px solid rgba(196, 181, 253, .16);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .08) inset, 0 60px 120px -40px rgba(2, 3, 20, .95), 0 0 80px -30px rgba(124, 58, 237, .35);
+  backdrop-filter: blur(22px) saturate(140%); -webkit-backdrop-filter: blur(22px) saturate(140%);
+  transform-style: preserve-3d;
+}
+.brief-idea {
+  background: linear-gradient(to left, rgba(37, 99, 235, .38), rgba(79, 70, 229, .3) 55%, rgba(124, 58, 237, .38));
+  border: 1px solid rgba(196, 181, 253, .28);
+  box-shadow: 0 10px 30px -12px rgba(79, 70, 229, .7);
+}
+.orbit-trail { animation: orbit-trail linear infinite; }
+@keyframes orbit-trail { from { stroke-dashoffset: 7; } to { stroke-dashoffset: -93; } }
+.orbit-glow { animation: orbit-breathe 9s ease-in-out infinite; }
+.orbit-glow-late { animation-delay: -4.5s; }
+@keyframes orbit-breathe { 0%, 100% { opacity: .65; transform: scale(1); } 50% { opacity: 1; transform: scale(1.08); } }
+.orbit-arc { animation: orbit-arc 7s ease-in-out infinite; filter: drop-shadow(0 0 6px rgba(196, 181, 253, .9)) drop-shadow(0 0 18px rgba(167, 139, 250, .6)); }
+@keyframes orbit-arc { 0%, 100% { opacity: .45; } 50% { opacity: .9; } }
