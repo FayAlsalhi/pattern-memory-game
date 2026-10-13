@@ -169,3 +169,13 @@
 @keyframes orbit-breathe { 0%, 100% { opacity: .65; transform: scale(1); } 50% { opacity: 1; transform: scale(1.08); } }
 .orbit-arc { animation: orbit-arc 7s ease-in-out infinite; filter: drop-shadow(0 0 6px rgba(196, 181, 253, .9)) drop-shadow(0 0 18px rgba(167, 139, 250, .6)); }
 @keyframes orbit-arc { 0%, 100% { opacity: .45; } 50% { opacity: .9; } }
+
+/* official logo: the signal glows — dot breathes, arcs flash outward in turn */
+.logo-dot { animation: logo-dot 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.logo-halo { animation: logo-halo 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.logo-arc { animation: logo-arc 2.6s ease-in-out infinite; opacity: .25; }
+.logo-arc-1 { animation-delay: .25s; filter: drop-shadow(0 0 6px rgba(147, 197, 253, .9)); }
+.logo-arc-2 { animation-delay: .6s; filter: drop-shadow(0 0 8px rgba(147, 197, 253, .8)); }
+@keyframes logo-dot { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.12); } 40% { transform: scale(1); } }
+@keyframes logo-halo { 0%, 100% { opacity: 0; transform: scale(.6); } 15% { opacity: 1; transform: scale(1); } 55% { opacity: 0; transform: scale(1.4); } }
+@keyframes logo-arc { 0%, 100% { opacity: .25; } 20% { opacity: 1; } 55% { opacity: .35; } }

@@ -1,15 +1,16 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion, useScroll, useTransform } from 'motion/react';
+import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
 import { useLocale } from '@/lib/locale';
-import { asset, langHref } from '@/lib/asset';
+import { langHref } from '@/lib/asset';
 import { usePrefersReducedMotion } from '@/lib/useReducedMotion';
 import { byId } from '@/content/media';
 import { links, trust, typewriter } from '@/content/site';
 import { Media } from '../media/Media';
 import { Reveal } from '../ui/primitives';
 import { Icon } from '../ui/Icon';
+import { AnimatedLogo } from '../ui/AnimatedLogo';
 
 /**
  * The last chapter: the original "looking for an influencer…" question, the
@@ -102,18 +103,15 @@ export function Contact() {
 
 function Footer() {
   const { c } = useLocale();
-  const ref = useRef<HTMLElement>(null);
-  const reduced = usePrefersReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end end'] });
-  const rise = useTransform(scrollYProgress, [0, 1], [reduced ? '0%' : '18%', '0%']);
   const nav = [['#work', c.nav.work], ['#creators', c.nav.creators], ['#services', c.nav.services], ['#method', c.nav.method], ['#clients', c.nav.clients]] as const;
 
   return (
-    <footer ref={ref} className="relative mt-32 md:mt-44">
-      <div className="mx-auto grid max-w-[1400px] gap-12 px-5 md:grid-cols-12 md:px-8">
+    <footer className="relative mt-32 md:mt-44">
+      <div className="mx-auto grid max-w-[1400px] gap-12 px-5 pb-16 md:grid-cols-12 md:px-8 md:pb-24">
         <div className="md:col-span-6">
           <p className="font-display text-[clamp(2rem,4.4vw,3.6rem)] leading-[1.2] [text-wrap:balance]">{c.footer.statement}</p>
           <p className="mt-4 max-w-md leading-8 text-white/55">{c.footer.sub}</p>
+          <AnimatedLogo label={`${c.brand} AI`} className="mt-10 h-auto w-[min(70vw,300px)]" />
         </div>
         <nav aria-label={c.footer.explore} className="md:col-span-3">
           <p className="mb-4 text-xs tracking-wider text-white/35">{c.footer.explore}</p>
@@ -129,20 +127,6 @@ function Footer() {
             <li><a href={langHref(c.langSwitch.href)} className="text-white/70 hover:text-white">{c.langSwitch.aria}</a></li>
           </ul>
         </div>
-      </div>
-
-      {/* the sign-off: the official Sayt Ai logo, rising into place */}
-      <div className="relative mt-20 overflow-hidden pb-16 pt-6 md:mt-28 md:pb-24">
-        <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 h-[70%] w-[min(90vw,900px)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,.28),transparent)] blur-2xl" />
-        <motion.img
-          src={asset('brand/logo-on-dark.svg')}
-          alt={`${c.brand} AI`}
-          width={626}
-          height={256}
-          loading="lazy"
-          style={{ y: rise }}
-          className="relative mx-auto block h-auto w-[min(82vw,760px)] select-none"
-        />
       </div>
 
       <div className="relative border-t border-white/10 bg-ink-950/80 backdrop-blur">
