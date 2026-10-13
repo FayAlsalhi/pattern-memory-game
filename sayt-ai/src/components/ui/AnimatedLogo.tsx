@@ -1,3 +1,7 @@
+'use client';
+
+import { useId } from 'react';
+
 /**
  * The official Sayt Ai logo (from brand/logo-on-dark.svg), inline so the
  * signal can glow: the blue dot breathes and the two arcs flash outward in
@@ -7,10 +11,11 @@ const WORDMARK = 'M397.68 200.0Q373.68 200.0 363.36 191.28Q353.04 182.56 353.04 
 const AI_A = 'M164.52 200.0 207.74 88.0H221.28000000000003L264.32 200.0H250.68L223.33 128.07Q222.85000000000002 126.95 221.56 123.015Q220.27 119.08 218.51 114.08Q216.75 109.08 215.135 104.53999999999999Q213.52 100.0 212.62 97.6L215.67000000000002 97.58Q214.71 100.37 213.245 104.63499999999999Q211.78000000000003 108.89999999999999 210.15500000000003 113.53999999999999Q208.53000000000003 118.17999999999999 207.09000000000003 122.19Q205.65 126.2 204.76000000000002 128.57L177.64000000000001 200.0ZM182.67000000000002 169.15 187.32000000000002 156.85H240.3L245.63 169.15Z';
 
 export function AnimatedLogo({ className = '', label }: { className?: string; label: string }) {
+  const glow = `sayt-glow-${useId().replace(/:/g, '')}`;
   return (
     <svg viewBox="140.5 11.5 625.5 255.5" role="img" aria-label={label} className={`overflow-visible ${className}`}>
       <defs>
-        <radialGradient id="sayt-dot-glow">
+        <radialGradient id={glow}>
           <stop offset="0" stopColor="#60a5fa" stopOpacity=".9" />
           <stop offset="1" stopColor="#2563eb" stopOpacity="0" />
         </radialGradient>
@@ -18,7 +23,7 @@ export function AnimatedLogo({ className = '', label }: { className?: string; la
       <path d={WORDMARK} fill="#FFFFFF" />
       <path d={AI_A} fill="#FFFFFF" />
       <rect x="281" y="117" width="14" height="83" rx="7" fill="#FFFFFF" />
-      <circle cx="288" cy="88" r="34" fill="url(#sayt-dot-glow)" className="logo-halo" />
+      <circle cx="288" cy="88" r="34" fill={`url(#${glow})`} className="logo-halo" />
       <circle cx="288" cy="88" r="13" fill="#2563EB" className="logo-dot" />
       <path d="M288 60 A28 28 0 0 1 316 88" fill="none" stroke="#93C5FD" strokeWidth="9" strokeLinecap="round" className="logo-arc logo-arc-1" />
       <path d="M288 40 A48 48 0 0 1 336 88" fill="none" stroke="#93C5FD" strokeWidth="9" strokeLinecap="round" className="logo-arc logo-arc-2" />

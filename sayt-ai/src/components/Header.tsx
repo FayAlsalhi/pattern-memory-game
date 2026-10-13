@@ -3,13 +3,15 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useLocale } from '@/lib/locale';
-import { asset, langHref } from '@/lib/asset';
+import { langHref } from '@/lib/asset';
 import { links } from '@/content/site';
 import { Icon } from './ui/Icon';
+import { AnimatedLogo } from './ui/AnimatedLogo';
 
-/** The official Sayt Ai logo (white wordmark, blue signal dot). */
+/** The official Sayt Ai logo, with the same glowing signal as the footer. */
 export function Logo({ className = '' }: { className?: string }) {
-  return <img src={asset('brand/logo-on-dark.svg')} alt="" width={98} height={40} className={`h-10 w-auto ${className}`} />;
+  const { c } = useLocale();
+  return <AnimatedLogo label={`${c.brand} AI`} className={`h-10 w-[98px] ${className}`} />;
 }
 
 export function Header() {
