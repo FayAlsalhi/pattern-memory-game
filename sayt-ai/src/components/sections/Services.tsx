@@ -1,6 +1,8 @@
 'use client';
 
+import { motion } from 'motion/react';
 import { useLocale } from '@/lib/locale';
+import { usePrefersReducedMotion } from '@/lib/useReducedMotion';
 import { services } from '@/content/site';
 import { Reveal } from '../ui/primitives';
 import { BriefStudio } from './BriefStudio';
@@ -24,7 +26,7 @@ export function Services() {
                   <h3 className="font-display text-[clamp(1.4rem,2.4vw,2rem)] leading-snug [text-wrap:balance]">{t(s.title)}</h3>
                   <p className="mt-3 max-w-lg leading-8 text-white/65">{t(s.body)}</p>
                   <p className="mt-3 text-sm text-white/40">
-                    {c.services.instead}: <span className="line-through decoration-sky/60">{t(s.instead)}</span>
+                    {c.services.instead}: <StrikeReveal text={t(s.instead)} />
                   </p>
                 </div>
               </Reveal>
@@ -33,5 +35,37 @@ export function Services() {
         </ol>
       </div>
     </section>
+  );
+}
+
+/**
+ * The old way, crossed out as you reach it: the words fade in, then a line
+ * draws through them in reading direction.
+ */
+function StrikeReveal({ text }: { text: string }) {
+  const { rtl } = useLocale();
+  const reduced = usePrefersReducedMotion();
+  const view = { once: true, margin: '-15% 0px' } as const;
+  return (
+    <span className="relative inline-block">
+      <motion.span
+        initial={reduced ? false : { opacity: 0, x: rtl ? 12 : -12 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={view}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        className="inline-block"
+      >
+        {text}
+      </motion.span>
+      <motion.span
+        aria-hidden
+        initial={reduced ? false : { scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={view}
+        transition={{ duration: 0.7, delay: 0.45, ease: [0.65, 0, 0.35, 1] }}
+        style={{ originX: rtl ? 1 : 0 }}
+        className="pointer-events-none absolute inset-x-0 top-[55%] h-[1.5px] rounded-full bg-sky/70 shadow-[0_0_8px_rgba(147,197,253,.6)]"
+      />
+    </span>
   );
 }
