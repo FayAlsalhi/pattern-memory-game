@@ -3,20 +3,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useScroll, useTransform } from 'motion/react';
 import { useLocale } from '@/lib/locale';
-import { langHref } from '@/lib/asset';
+import { asset, langHref } from '@/lib/asset';
 import { usePrefersReducedMotion } from '@/lib/useReducedMotion';
 import { byId } from '@/content/media';
 import { links, trust, typewriter } from '@/content/site';
 import { Media } from '../media/Media';
 import { Reveal } from '../ui/primitives';
 import { Icon } from '../ui/Icon';
-import { SignalMark } from '../ui/SignalMark';
 
 /**
  * The last chapter: the original "looking for an influencer…" question, the
  * two entry cards, then the sign-off — the
- * name itself, huge, with the mark's arcs carrying outward. صيت means
- * reputation that travels; the ending is built on that.
+ * official logo. صيت means reputation that travels; the ending is built on that.
  */
 export function Contact() {
   const { c, t, rtl } = useLocale();
@@ -107,7 +105,7 @@ function Footer() {
   const ref = useRef<HTMLElement>(null);
   const reduced = usePrefersReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end end'] });
-  const rise = useTransform(scrollYProgress, [0, 1], [reduced ? '0%' : '35%', '0%']);
+  const rise = useTransform(scrollYProgress, [0, 1], [reduced ? '0%' : '18%', '0%']);
   const nav = [['#work', c.nav.work], ['#creators', c.nav.creators], ['#services', c.nav.services], ['#method', c.nav.method], ['#clients', c.nav.clients]] as const;
 
   return (
@@ -133,12 +131,18 @@ function Footer() {
         </div>
       </div>
 
-      {/* the sign-off: the name, cropped by the bottom of the page, arcs carrying outward */}
-      <div className="relative mt-20 overflow-hidden md:mt-28">
-        <motion.div style={{ y: rise }} className="mx-auto flex max-w-[1400px] items-end justify-center gap-[3vw] px-5 md:px-8" aria-hidden>
-          <span className="type-grain select-none font-display text-[min(36vw,30rem)] leading-[0.95] tracking-[-0.02em] [margin-bottom:-0.14em]">{c.brand}</span>
-          <SignalMark pulse className="mb-[3vw] h-[min(20vw,16rem)] shrink-0 text-sky" />
-        </motion.div>
+      {/* the sign-off: the official Sayt Ai logo, rising into place */}
+      <div className="relative mt-20 overflow-hidden pb-16 pt-6 md:mt-28 md:pb-24">
+        <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 h-[70%] w-[min(90vw,900px)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(37,99,235,.28),transparent)] blur-2xl" />
+        <motion.img
+          src={asset('brand/logo-on-dark.svg')}
+          alt={`${c.brand} AI`}
+          width={626}
+          height={256}
+          loading="lazy"
+          style={{ y: rise }}
+          className="relative mx-auto block h-auto w-[min(82vw,760px)] select-none"
+        />
       </div>
 
       <div className="relative border-t border-white/10 bg-ink-950/80 backdrop-blur">

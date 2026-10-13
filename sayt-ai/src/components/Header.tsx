@@ -7,17 +7,9 @@ import { asset, langHref } from '@/lib/asset';
 import { links } from '@/content/site';
 import { Icon } from './ui/Icon';
 
+/** The official Sayt Ai logo (white wordmark, blue signal dot). */
 export function Logo({ className = '' }: { className?: string }) {
-  const { c } = useLocale();
-  return (
-    <span className={`inline-flex items-center gap-2.5 ${className}`}>
-      <img src={asset('brand/favicon.svg')} alt="" width={34} height={34} className="h-[34px] w-[34px]" />
-      <span className="font-display text-2xl leading-none">
-        {c.brand}
-        <sup className="ms-1 align-super font-sans text-[0.55em] font-semibold tracking-wider text-sky">AI</sup>
-      </span>
-    </span>
-  );
+  return <img src={asset('brand/logo-on-dark.svg')} alt="" width={98} height={40} className={`h-10 w-auto ${className}`} />;
 }
 
 export function Header() {
