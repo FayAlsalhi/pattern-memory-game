@@ -132,7 +132,6 @@ function Footer() {
       <div className="relative border-t border-white/10 bg-ink-950/80 backdrop-blur">
         <div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-4 px-5 py-6 text-xs text-white/40 md:px-8">
           <p dir="ltr">© {new Date().getFullYear()} Sayt AI · {c.footer.rights}</p>
-          <p className="tracking-[.3em]" dir="ltr">{c.footer.line}</p>
           <a href="#top" className="inline-flex items-center gap-2 text-white/60 hover:text-white">
             {c.footer.top}
             <Icon name="arrow" className="-rotate-90 h-4 w-4" />
