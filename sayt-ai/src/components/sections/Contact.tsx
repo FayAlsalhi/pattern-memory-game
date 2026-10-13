@@ -36,7 +36,7 @@ export function Contact() {
   return (
     <section id="contact" aria-labelledby="contact-title" className="relative isolate overflow-hidden pt-28 md:pt-40">
       <div aria-hidden className="absolute inset-x-0 top-0 -z-10 h-[110vh] opacity-35">
-        <Media item={byId('film-brand')} />
+        <Media item={byId('ambient-signal')} />
         <div className="absolute inset-0 bg-gradient-to-b from-ink-950 via-ink-950/50 to-ink-950" />
       </div>
 

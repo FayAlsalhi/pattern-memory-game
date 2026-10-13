@@ -101,6 +101,13 @@ export const media: MediaItem[] = [
     placements: ['featured', 'production', 'gallery'], placeholder: true,
   },
   {
+    // decorative ambient loop (no text, imitates no campaign) behind the closing call to action
+    id: 'ambient-signal', ...v('ambient-signal'), aspect: '16:9', category: 'brand', format: film, order: 99,
+    title: { ar: 'خلفية الإشارة', en: 'Signal backdrop' },
+    alt: { ar: 'موجات إشارة هادئة فوق قماش نيلي', en: 'Calm signal waves over indigo fabric' },
+    placements: [],
+  },
+  {
     id: 'film-event', ...v('film-event'), aspect: '16:9', category: 'brand', format: film, order: 13,
     title: { ar: 'تغطية فعالية', en: 'Event coverage' },
     alt: { ar: 'نموذج فيلم تغطية فعالية', en: 'Placeholder event coverage film' },

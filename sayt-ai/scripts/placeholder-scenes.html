@@ -69,7 +69,9 @@ function finish(p, f) {
   g.fillStyle = vg; g.fillRect(0, 0, W, H);
   // animated grain
   const gp = g.createPattern(grain[f % 3], 'repeat'); g.fillStyle = gp; g.fillRect(0, 0, W, H);
-  // placeholder label — always visible
+  // placeholder label — always visible on stand-in campaign media
+  // (decorative ambient loops that imitate no campaign set label: false)
+  if (S.label === false) return;
   const u = Math.min(W, H) / 540;
   g.font = `${15 * u}px Sans`; g.textBaseline = 'middle';
   const label = 'نموذج مؤقت · PLACEHOLDER';
@@ -271,6 +273,20 @@ const motifs = {
       g.beginPath(); g.ellipse(x, y, 8 * s, 4 * s, ph * 6, 0, TAU); g.fill();
     }
     g.globalAlpha = 1;
+  },
+  signal(p, u, cx, cy) {
+    // the Sayt signal: arcs leaving one point and fading as they travel
+    for (let i = 0; i < 7; i++) {
+      const ph = (p + i / 7) % 1;
+      const r = 30 * u + ph * Math.max(W, H) * 0.85;
+      const a = Math.sin(ph * Math.PI) * 0.32;
+      g.strokeStyle = i % 2 ? `rgba(196,181,253,${a})` : `rgba(147,197,253,${a})`;
+      g.lineWidth = (2.5 - ph * 1.5) * u;
+      g.beginPath(); g.arc(cx, cy, r, Math.PI * 1.08, Math.PI * 1.92); g.stroke();
+    }
+    const glow = g.createRadialGradient(cx, cy, 0, cx, cy, 120 * u);
+    glow.addColorStop(0, `rgba(37,99,235,${0.45 + 0.15 * wave(p, 2)})`); glow.addColorStop(1, 'rgba(37,99,235,0)');
+    g.fillStyle = glow; g.fillRect(cx - 120 * u, cy - 120 * u, 240 * u, 240 * u);
   },
   rings(p, u, cx, cy) {
     const s = u;

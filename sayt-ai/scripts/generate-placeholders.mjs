@@ -41,6 +41,8 @@ const scenes = [
   // ---- landscape 16:9 ----
   { id: 'film-brand', ...L, motif: 'fabric', palette: ['#8b9cff', '#28307a', '#070a1e'], title: 'قصة علامتك', subtitle: 'فيلم حملة · نموذج', titleY: 0.48, titleSize: 120, titleIn: 0.1, titleOut: 0.9 },
   { id: 'film-launch', ...L, motifs: ['spotlight', 'bottle'], palette: ['#f0c27a', '#5a3a0e', '#0d0802'], accent: ['#f1d18a', '#7a5414'], title: 'إطلاق منتج', subtitle: 'إعلان تجاري · نموذج', titleY: 0.16, cy: 0.58, titleSize: 70 },
+  // decorative ambient loop behind the closing call to action — no text, no campaign
+  { id: 'ambient-signal', ...L, duration: 10, motifs: ['fabric', 'signal'], palette: ['#4f46e5', '#1e1b6b', '#04061a'], cy: 0.92, label: false },
   { id: 'film-event', ...L, motif: 'rings', palette: ['#c4b5fd', '#4c1d95', '#0b0420'], confetti: ['#c4b5fd', '#ffffff', '#f0abfc', '#fde68a'], title: 'تغطية فعالية', subtitle: 'افتتاحات وإطلاقات · نموذج', titleY: 0.48, titleSize: 110 },
 ];
 
